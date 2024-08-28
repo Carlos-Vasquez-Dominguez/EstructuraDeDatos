@@ -1,0 +1,64 @@
+NOMBRE
+git-config - Obtener y configurar el repositorio o las opciones globales
+
+SINOPSIS
+git config list [<opción-archivo>] [<opción-mostrar>] [--includes]
+ git config get [<opción-archivo>] [<opción-mostrar>] [--includes] [--all] [--regexp=<regexp>] [--value=<valor>] [--fixed-value] [--default=<predeterminado>] <nombre>
+ git config set [<opción-archivo>] [--type=<tipo>] [--all] [--value=<valor>] [--fixed-value] <nombre> <valor>
+ git config unset [<opción-archivo>] [--all] [--value=<valor>] [--fixed-value] <nombre> <valor>
+ git config rename-section [<opción-archivo>] <nombre-antiguo> <nombre-nuevo>
+ git config remove-section [<opción-archivo>] <nombre>
+ git config edit [<opción-archivo>]
+ git config [<opción-archivo>] --get-colorbool <nombre> [<stdout-is-tty>]
+DESCRIPCIÓN
+Con este comando puede consultar, configurar, reemplazar o anular opciones. El nombre es en realidad la sección y la clave separadas por un punto, y el valor se escapará.
+
+Se pueden agregar varias líneas a una opción utilizando la --appendopción. Si desea actualizar o anular una opción que puede aparecer en varias líneas, se debe proporcionar una value-pattern(que es una expresión regular extendida, a menos que --fixed-valuese proporcione la opción). Solo se actualizan o anulan los valores existentes que coinciden con el patrón. Si desea manejar las líneas que no coinciden con el patrón, simplemente anteponga un solo signo de exclamación (consulte también EJEMPLOS ), pero tenga en cuenta que esto solo funciona cuando la --fixed-valueopción no está en uso.
+
+La --type=<type>opción indica a git config que se asegure de que los valores entrantes y salientes se puedan canonizar según el <type> indicado. Si --type=<type>se indica no, no se realizará ninguna canonización. Los usuarios que llaman pueden anular la configuración de un --typeespecificador existente con --no-type.
+
+Al leer, los valores se leen desde los archivos de configuración local del sistema, global y del repositorio de manera predeterminada, y las opciones , , y --systemse --globalpueden --localusar para indicarle al comando que lea solo desde esa ubicación (ver ARCHIVOS ).--worktree--file <filename>
+
+Al escribir, el nuevo valor se escribe en el archivo de configuración local del repositorio de manera predeterminada, y se pueden usar las opciones --system, --global, --worktree, --file <filename>para indicarle al comando que escriba en esa ubicación (puede decirlo, --localpero ese es el valor predeterminado).
+
+Este comando fallará con un estado distinto de cero en caso de error. Algunos códigos de salida son:
+
+La sección o clave no es válida (ret=1),
+
+No se proporcionó ninguna sección ni nombre (ret=2),
+
+El archivo de configuración no es válido (ret=3),
+
+No se puede escribir el archivo de configuración (ret=4),
+
+intenta anular una opción que no existe (ret=5),
+
+intenta anular/activar una opción para la que coinciden varias líneas (ret=5), o
+
+Intenta utilizar una expresión regular no válida (ret=6).
+
+En caso de éxito, el comando devuelve el código de salida 0.
+
+Se puede obtener una lista de todas las variables de configuración disponibles utilizando el git help --configcomando.
+
+COMANDOS
+lista
+Enumere todas las variables establecidas en el archivo de configuración, junto con sus valores.
+
+conseguir
+Emite el valor de la clave especificada. Si la clave está presente varias veces en la configuración, emite el último valor. Si --allse especifica, emite todos los valores asociados con la clave. Devuelve el código de error 1 si la clave no está presente.
+
+colocar
+Establezca un valor para una o más opciones de configuración. De manera predeterminada, este comando se niega a escribir opciones de configuración de varios valores. Al pasarlo, --allse reemplazarán todas las opciones de configuración de varios valores con el nuevo valor, mientras que --value=se reemplazarán todas las opciones de configuración cuyos valores coincidan con el patrón dado.
+
+desarmado
+Anular el valor de una o más opciones de configuración. De forma predeterminada, este comando se niega a anular la configuración de claves multivalor. Si se pasa, --allse anularán todas las opciones de configuración multivalor, mientras que --valuese anularán todas las opciones de configuración cuyos valores coincidan con el patrón indicado.
+
+renombrar-sección
+Cambie el nombre de la sección dada a un nuevo nombre.
+
+eliminar-seccion
+Eliminar la sección dada del archivo de configuración.
+
+editar
+Abre un editor para modificar el archivo de configuración especificado; ya sea --system, --global, --local(predeterminado), --worktreeo --file <config-file>.
